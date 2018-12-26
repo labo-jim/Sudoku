@@ -15,7 +15,7 @@ function afficher(grille){
 
 
 // Cette fonction retrourne les chiffre d'une colomne
-function colomne(colomne,grille){
+function chiffresColomne(colomne,grille){
     let chiffresDeLaColomne = [];
     
     for(let ligne of grille){
@@ -60,6 +60,54 @@ function carre(ligne,colomne,grille){
 }
 
 
+function chiffresPossibles(ligne,colomne,grille){
+    // lister toute les possibilitées, les 9 chiffres
+   // Au début, ils sont tous 'true', c'est à dire potentiellement possibles
+   let possibilites = {
+       1: true,
+       2: true,
+       3: true,
+       4: true,
+       5: true,
+       6: true,
+       7: true,
+       8: true,
+       9: true
+   };
+   
+
+   
+   // Eliminer les chiffres déjà présents sur la ligne
+   for(let chiffreDejaSurLaLigne of grille[ligne]){
+       if(chiffreDejaSurLaLigne !== null){
+           // console.log("On exclut " + chiffreDejaSurLaLigne + "qui est déjà dans la ligne");
+           delete possibilites[chiffreDejaSurLaLigne];
+           // console.log(possibilites);
+       }
+   }
+   
+   // Eliminer les chiffres déjà présents sur la colomne
+   for(let chiffreDejaSurLaColomne of chiffresColomne(colomne,grille)){
+       if(chiffreDejaSurLaColomne !== null){
+           // console.log("On exclut " + chiffreDejaSurLaColomne + "qui est déjà dans la colomne");
+           delete possibilites[chiffreDejaSurLaColomne];
+           // console.log(possibilites);
+       }
+   }
+   
+   // Eliminer les chiffres déjà présents dans le carré
+   for(let chiffreDejaDansLeCarre of carre(ligne,colomne,grille)){
+       if(chiffreDejaDansLeCarre !== null){
+           //console.log("On exclut " + chiffreDejaDansLeCarre + "qui est déjà dans le carré");
+           delete possibilites[chiffreDejaDansLeCarre];
+           //console.log(possibilites);
+       }
+   }
+   
+   return possibilites;
+}
+
+
 
 
 // ================================
@@ -91,48 +139,7 @@ function resoudre(grille,verbose){
         for(let colomneCourante = 0; colomneCourante < grille[ligneCourante].length; colomneCourante++){
             let chiffre = grille[ligneCourante][colomneCourante];
            if(chiffre === null){
-               // lister toute les possibilitées, les 9 chiffres
-               // Au début, ils sont tous 'true', c'est à dire potentiellement possibles
-               let possibilites = {
-                   1: true,
-                   2: true,
-                   3: true,
-                   4: true,
-                   5: true,
-                   6: true,
-                   7: true,
-                   8: true,
-                   9: true
-               };
-               
-
-               
-               // Eliminer les chiffres déjà présents sur la ligne
-               for(let chiffreDejaSurLaLigne of grille[ligneCourante]){
-                   if(chiffreDejaSurLaLigne !== null){
-                       // console.log("On exclut " + chiffreDejaSurLaLigne + "qui est déjà dans la ligne");
-                       delete possibilites[chiffreDejaSurLaLigne];
-                       // console.log(possibilites);
-                   }
-               }
-               
-               // Eliminer les chiffres déjà présents sur la colomne
-               for(let chiffreDejaSurLaColomne of colomne(colomneCourante,grille)){
-                   if(chiffreDejaSurLaColomne !== null){
-                       // console.log("On exclut " + chiffreDejaSurLaColomne + "qui est déjà dans la colomne");
-                       delete possibilites[chiffreDejaSurLaColomne];
-                       // console.log(possibilites);
-                   }
-               }
-               
-               // Eliminer les chiffres déjà présents dans le carré
-               for(let chiffreDejaDansLeCarre of carre(ligneCourante,colomneCourante,grille)){
-                   if(chiffreDejaDansLeCarre !== null){
-                       //console.log("On exclut " + chiffreDejaDansLeCarre + "qui est déjà dans le carré");
-                       delete possibilites[chiffreDejaDansLeCarre];
-                       //console.log(possibilites);
-                   }
-               }
+               let possibilites = chiffresPossibles(ligneCourante,colomneCourante,grille)
                
                let chiffresRestants = Object.keys(possibilites);
                if(verbose){
