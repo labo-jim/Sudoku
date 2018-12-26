@@ -14,6 +14,7 @@ function afficher(grille){
 }
 
 
+
 // Cette fonction retrourne les chiffre d'une colomne
 function chiffresColomne(colomne,grille){
     let chiffresDeLaColomne = [];
@@ -44,18 +45,32 @@ function premierDuCarre(indice){
     }
 }
 
+function coordonnesCarre(ligne,colomne){
+    let premiereLigne = premierDuCarre(ligne);
+    let premiereColomne = premierDuCarre(colomne);
+    
+    return [
+        [premiereLigne,premiereColomne],
+        [premiereLigne,premiereColomne+1],
+        [premiereLigne,premiereColomne+2],
+        [premiereLigne +1 ,premiereColomne],
+        [premiereLigne+1,premiereColomne+1],
+        [premiereLigne+1,premiereColomne+2],
+        [premiereLigne+2,premiereColomne],
+        [premiereLigne+2,premiereColomne+1],
+        [premiereLigne+2,premiereColomne+2]
+    ];
+}
+
 // Cette fonction retourne les chiffres présents dans le même carré que les coordonnées données
 function carre(ligne,colomne,grille){
     let chiffresDuCarre = [];
     
-    let premiereLigne = premierDuCarre(ligne);
-    let premiereColomne = premierDuCarre(colomne);
-    for(let ligne = premiereLigne; ligne <= premiereLigne+2; ligne++ ){
-        for(let colomne = premiereColomne; colomne <= premiereColomne+2; colomne++ ){
-            chiffresDuCarre.push(grille[ligne][colomne]);   
-        }        
+    let coordonnes = coordonnesCarre(ligne,colomne);
+    for(let paireCoord of coordonnes){
+        chiffresDuCarre.push(grille[paireCoord[0]][paireCoord[1]]);
     }
-    
+       
     return chiffresDuCarre;
 }
 
@@ -104,7 +119,7 @@ function chiffresPossibles(ligne,colomne,grille){
        }
    }
    
-   return possibilites;
+   return Object.keys(possibilites);
 }
 
 
@@ -139,18 +154,39 @@ function resoudre(grille,verbose){
         for(let colomneCourante = 0; colomneCourante < grille[ligneCourante].length; colomneCourante++){
             let chiffre = grille[ligneCourante][colomneCourante];
            if(chiffre === null){
-               let possibilites = chiffresPossibles(ligneCourante,colomneCourante,grille)
+             
                
-               let chiffresRestants = Object.keys(possibilites);
+               let chiffresRestants = chiffresPossibles(ligneCourante,colomneCourante,grille)
                if(verbose){
                    console.log(ligneCourante + " - " + colomneCourante + " : " + chiffresRestants.length + " possibilités restantes");
-                   console.log(possibilites);
+                   console.log(chiffresRestants);
                }
 
                if(chiffresRestants.length === 1){
+                   // il ne reste qu'une posibilite
                    let leBonChiffre = Number(chiffresRestants[0]);
                    if(verbose)console.log("il n'y a qu'une seule possibilité : " + leBonChiffre);
                    grille[ligneCourante][colomneCourante] = leBonChiffre;
+               } else {
+                   // + condition supplémentaire "forcer" ?
+                   
+                   // L'un de ces chiffres :
+                   // N'est pas possible ailleurs sur la ligne
+                   let possibDesAutresCasesDeLaLigne = new Set();
+                  for(let c = 0; c < 9;c++){
+                      if(grille[ligneCourante][c] === null && c != colomneCourante){
+                          for(let chiffrePossibleDansLaLigne of chiffresPossibles(ligneCourante,c,grille)){
+                              possibDesAutresCasesDeLaLigne.add(chiffrePossibleDansLaLigne);
+                          }
+                      }
+                  }
+                  for(let chiffreRestant of chiffresRestants){
+                      if(!possibDesAutresCasesDeLaLigne.has(chiffreRestant)){
+                          if(verbose)console.log(chiffreRestant + "  ne peut être qu'ici dans la ligne");
+                          grille[ligneCourante][colomneCourante] = chiffreRestant;
+                          continue;
+                      }
+                  }
                }
                
            }
@@ -163,8 +199,8 @@ for(let i = 0;i < 100; i++){
   resoudre(grilleTest);
 }
 
-grilleTest[1][0] = 7;
-grilleTest[8][2] = 7;
+//grilleTest[1][0] = 7;
+//grilleTest[8][2] = 7;
 
 afficher(grilleTest);
 
