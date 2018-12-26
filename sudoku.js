@@ -59,14 +59,7 @@ function carre(ligne,colomne,grille){
     return chiffresDuCarre;
 }
 
-// Sur une map clé(chiffre de 1 à 9), valeur(true si encore possible)
-// renvoie la liste des chiffres encore possibles
-function chiffresPossibles(tablePossibilites){
-    let chiffres = [];
-    for(let chiffre of tablePossibilites.keys()){
-        
-    }
-}
+
 
 
 // ================================
@@ -74,17 +67,17 @@ function chiffresPossibles(tablePossibilites){
 var vide = null;
 var grilleTest = [];
 
-grilleTest[0] = [8,7,vide,vide,9,vide,vide,6,5];
-grilleTest[1] = [vide,9,vide,5,vide,vide,vide,vide,vide];
-grilleTest[2] = [vide,vide,vide,vide,1,4,vide,vide,vide];
+grilleTest[0] = [vide,vide,9,vide,vide,vide,vide,8,vide];
+grilleTest[1] = [vide,vide,3,vide,vide,8,5,vide,vide];
+grilleTest[2] = [vide,vide,vide,5,1,vide,vide,9,7];
 
-grilleTest[3] = [7,vide,vide,vide,vide,vide,5,vide,9];
-grilleTest[4] = [vide,vide,2,vide,vide,vide,1,vide,vide];
-grilleTest[5] = [5,vide,4,2,vide,vide,vide,vide,6];
+grilleTest[3] = [vide,vide,vide,7,vide,vide,6,1,4];
+grilleTest[4] = [vide,7,vide,vide,vide,vide,vide,5,vide];
+grilleTest[5] = [8,6,2,vide,vide,4,3,7,9];
 
-grilleTest[6] = [vide,vide,vide,4,2,vide,vide,vide,vide];
-grilleTest[7] = [vide,vide,vide,vide,vide,7,vide,5,vide];
-grilleTest[8] = [6,5,vide,vide,3,vide,vide,4,7];
+grilleTest[6] = [1,2,vide,vide,7,6,vide,vide,vide];
+grilleTest[7] = [vide,vide,6,8,vide,vide,7,vide,vide];
+grilleTest[8] = [vide,3,vide,vide,vide,vide,9,vide,vide];
 
 
 
@@ -163,11 +156,15 @@ for(let i = 0;i < 100; i++){
   resoudre(grilleTest);
 }
 
+grilleTest[1][0] = 7;
+grilleTest[8][2] = 7;
 
 afficher(grilleTest);
 
 
 resoudre(grilleTest,true);
+
+afficher(grilleTest);
 
 
 
