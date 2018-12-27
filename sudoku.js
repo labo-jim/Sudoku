@@ -13,6 +13,16 @@ function afficher(grille){
     console.log(affichage);
 }
 
+function conterCasesVides(grille){
+    let nb = 0;
+    for(let ligne of grille){
+        for(let chiffre of ligne){
+            if(chiffre === null) nb++;       
+        }
+    } 
+    return nb;
+}
+
 
 
 // Cette fonction retrourne les chiffre d'une colomne
@@ -146,7 +156,27 @@ grilleTest[8] = [vide,3,vide,vide,vide,vide,9,vide,vide];
 
 afficher(grilleTest);
 
+console.log("il faut trouver " + conterCasesVides(grilleTest) + " cases");
+console.log("==================================\n\n\n\n");
+
+// ================================
+
+function chiffresPossibleSurLeResteDeLaLigne(ligneCourante,colomneCourante,grille){
+       // On fait un set des chiffres possibles ailleurs sur cette ligne
+    let possibDesAutresCasesDeLaLigne = new Set();
+      for(let c = 0; c < 9;c++){
+          if(grille[ligneCourante][c] === null && c != colomneCourante){
+              for(let chiffrePossibleDansLaLigne of chiffresPossibles(ligneCourante,c,grille)){
+                  possibDesAutresCasesDeLaLigne.add(chiffrePossibleDansLaLigne);
+              }
+          }
+      }
+      
+     return possibDesAutresCasesDeLaLigne;
+}
+
 function resoudre(grille,verbose){
+    let nbCaseResolues = 0;
     if(typeof verbose === "undefined"){
         verbose = false;
     }
@@ -165,25 +195,28 @@ function resoudre(grille,verbose){
                if(chiffresRestants.length === 1){
                    // il ne reste qu'une posibilite
                    let leBonChiffre = Number(chiffresRestants[0]);
+                   
                    if(verbose)console.log("il n'y a qu'une seule possibilité : " + leBonChiffre);
+                   
                    grille[ligneCourante][colomneCourante] = leBonChiffre;
+                   nbCaseResolues++;
                } else {
                    // + condition supplémentaire "forcer" ?
                    
                    // L'un de ces chiffres :
-                   // N'est pas possible ailleurs sur la ligne
-                   let possibDesAutresCasesDeLaLigne = new Set();
-                  for(let c = 0; c < 9;c++){
-                      if(grille[ligneCourante][c] === null && c != colomneCourante){
-                          for(let chiffrePossibleDansLaLigne of chiffresPossibles(ligneCourante,c,grille)){
-                              possibDesAutresCasesDeLaLigne.add(chiffrePossibleDansLaLigne);
-                          }
-                      }
-                  }
+                   // N'est pas possible ailleurs sur la ligne ?
+                   
+
+                   let possibDesAutresCasesDeLaLigne = chiffresPossibleSurLeResteDeLaLigne(ligneCourante,colomneCourante,grille);
+                  
+                  // On vérifie pour chaque chiffre possible pour cette case
+                  // S'il est dans le set en question. Si non : c'est celui là !
                   for(let chiffreRestant of chiffresRestants){
                       if(!possibDesAutresCasesDeLaLigne.has(chiffreRestant)){
                           if(verbose)console.log(chiffreRestant + "  ne peut être qu'ici dans la ligne");
+                          
                           grille[ligneCourante][colomneCourante] = chiffreRestant;
+                          nbCaseResolues++;
                           continue;
                       }
                   }
@@ -192,22 +225,29 @@ function resoudre(grille,verbose){
            }
         }
     }
+    
+    return nbCaseResolues;
 }
 
 
-for(let i = 0;i < 100; i++){
-  resoudre(grilleTest);
+// ==========================
+
+
+let casesRestantes = conterCasesVides(grilleTest);
+
+while(casesRestantes > 0){
+    let nbCasesResolues = resoudre(grilleTest);
+    if(nbCasesResolues == 0){
+        console.log("L'algorithme est bloqué !");
+        break;
+    } else {
+        casesRestantes -= nbCasesResolues;
+        afficher(grilleTest);
+        console.log("il reste " + conterCasesVides(grilleTest) + " cases à trouver.");
+    }
 }
 
-//grilleTest[1][0] = 7;
-//grilleTest[8][2] = 7;
 
-afficher(grilleTest);
-
-
-resoudre(grilleTest,true);
-
-afficher(grilleTest);
 
 
 
