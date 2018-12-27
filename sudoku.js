@@ -84,10 +84,9 @@ function carre(ligne,colomne,grille){
     return chiffresDuCarre;
 }
 
-
+// Cette fonction retourne la liste des chiffres possibles sur une case donnée
 function chiffresPossibles(ligne,colomne,grille){
-    // lister toute les possibilitées, les 9 chiffres
-   // Au début, ils sont tous 'true', c'est à dire potentiellement possibles
+    
    let possibilites = {
        1: true,
        2: true,
@@ -140,17 +139,18 @@ function chiffresPossibles(ligne,colomne,grille){
 var vide = null;
 var grilleTest = [];
 
-grilleTest[0] = [vide,vide,9,vide,vide,vide,vide,8,vide];
-grilleTest[1] = [vide,vide,3,vide,vide,8,5,vide,vide];
-grilleTest[2] = [vide,vide,vide,5,1,vide,vide,9,7];
+// grille difficile
+grilleTest[0] = [vide,4,vide,vide,vide,vide,vide,1,vide];
+grilleTest[1] = [vide,vide,vide,1,vide,5,vide,vide,2];
+grilleTest[2] = [vide,vide,vide,vide,2,3,vide,vide,9];
 
-grilleTest[3] = [vide,vide,vide,7,vide,vide,6,1,4];
-grilleTest[4] = [vide,7,vide,vide,vide,vide,vide,5,vide];
-grilleTest[5] = [8,6,2,vide,vide,4,3,7,9];
+grilleTest[3] = [vide,2,5,vide,6,vide,vide,vide,4];
+grilleTest[4] = [vide,8,vide,vide,vide,vide,vide,7,vide];
+grilleTest[5] = [6,vide,vide,vide,7,vide,2,9,vide];
 
-grilleTest[6] = [1,2,vide,vide,7,6,vide,vide,vide];
-grilleTest[7] = [vide,vide,6,8,vide,vide,7,vide,vide];
-grilleTest[8] = [vide,3,vide,vide,vide,vide,9,vide,vide];
+grilleTest[6] = [3,vide,vide,9,5,vide,vide,vide,vide];
+grilleTest[7] = [4,vide,vide,8,vide,7,vide,vide,vide];
+grilleTest[8] = [vide,9,vide,vide,vide,vide,vide,3,vide];
 
 
 
@@ -187,6 +187,7 @@ function resoudre(grille,verbose){
              
                
                let chiffresRestants = chiffresPossibles(ligneCourante,colomneCourante,grille)
+               
                if(verbose){
                    console.log(ligneCourante + " - " + colomneCourante + " : " + chiffresRestants.length + " possibilités restantes");
                    console.log(chiffresRestants);
