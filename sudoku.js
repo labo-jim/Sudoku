@@ -1,10 +1,10 @@
 console.log('hello\n\n');
 
 function afficher(grille){
-    let affichage = '';
+    let affichage = '\n';
     for(let ligne of grille){
         for(let chiffre of ligne){
-            if(chiffre === null) chiffre = '_';
+            if(chiffre === null) chiffre = '·';
             affichage += chiffre + ' ';
         }
         affichage += '\n';
@@ -235,19 +235,25 @@ function resoudre(grille,verbose){
 
 
 let casesRestantes = conterCasesVides(grilleTest);
+let nbIterations = 0;
 
 while(casesRestantes > 0){
+    nbIterations++;
+    
     let nbCasesResolues = resoudre(grilleTest);
     if(nbCasesResolues == 0){
         console.log("L'algorithme est bloqué !");
         break;
     } else {
         casesRestantes -= nbCasesResolues;
+        
         afficher(grilleTest);
-        console.log("il reste " + conterCasesVides(grilleTest) + " cases à trouver.");
+        console.log("Itération n°" + nbIterations + " - " + nbCasesResolues + " cases trouvées.\nil reste "
+            + conterCasesVides(grilleTest) + " cases à trouver.");
     }
 }
 
+console.log('Résolution terminée en ' + nbIterations + ' itérations.')
 
 
 
